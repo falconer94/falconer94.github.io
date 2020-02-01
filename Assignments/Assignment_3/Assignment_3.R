@@ -1,3 +1,4 @@
+library(tidyverse)
 # Assignment Week 3
 
 
@@ -15,7 +16,7 @@ vector2 = c(5,6,7,8,4,3,2,1,3,10)
 vector1*vector2
 
 getwd()
-setwd("Desktop/Data_Course/Data/")
+setwd("../Data_Course/Data/")
 
 list.files()
 
@@ -78,30 +79,38 @@ levels(dat$Headwidth) # levels gives all the "options" of a factor you feed it
                                             # It should probably be "41.000"
 
 # FIND WHICH ONES HAVE "41mm"
+class(dat$Headwidth)
+
 dat$Headwidth == "41mm"
-options(max.print = 100000)
+options(max.print = 1000)
 # CONVERT THOSE TO "41.000"
-dat[dat$Headwidth == "41mm","Headwidth"] <- "41.000"
+dat$Headwidth[dat$Headwidth == "41mm"] <- "41.000"
+sum(dat$Headwidth == "") ## T is 1, F is 0
+which(dat$Headwidth == "") ## numeric index of index; where it is
+## change to a preexisting level;
+## Add "poop" level
+levels(dat$Headwidth) <- c(levels(dat$Headwidth,"poop"))
+
+
 
 # DO THE SAME FOR "", BUT CONVERT THOSE TO "NA"
-na.fail(dat) #missing values in object
-?na_if()
-?na.strings()
-is.na(dat) # shows all NAs
+## dat$Headwidth[dat$Headwidth == ""] <- "NA" nope; "" indicates a character
+## or 
+bademptys <- which(dat$Headwidth == "")
+dat$Headwidth[bademptys] <- NA
 
-
-class(dat$Headwidth)
-dat[dat$Headwidth == "","Headwidth"] <- "NA"
-
-str(dat)
+sum(dat$Headwidth == "")
+which(dat$Headwidth == "")
 # NOW, REMOVE ALL THE ROWS OF "dat" THAT HAVE AN "NA" VALUE
 dat <- na.omit(dat)
-
-
+levels(dat$Headwidth) ## all levels
+unique(dat$Headwidth) ## show current levels
+dat$Headwidth <- factor(dat$Headwidth,levels=unique(dat$Headwidth)) ## overwrite factors
+?factor()
 # NOW, CONVERT THAT PESKY "Headwidth" COLUMN INTO A NUMERIC VECTOR WITHIN "dat"
 class(dat$Headwidth)
-dat$Headwidth <- as.numeric(dat$Headwidth)
-
+dat$Headwidth <- as.character(dat$Headwidth) %>% as.numeric()
+## From numeric to factor, no need to change back to character; dat$Headwidth <- as.factor(dat$Headwidth)
 # LET'S LEARN HOW TO MAKE A DATA FRAME FROM SCRATCH... WE JUST FEED IT VECTORS WITH NAMES!
 
 # make some vectors *of equal length* (or you can pull these from existing vectors)
@@ -119,9 +128,6 @@ df1 # look at it...note column names are what we gave it.
 # Make a data frame from the first 20 rows of the ant data that only has "Colony" and "Mass"
 # save it into an object called "dat3"
 
-library(tidyverse)
-library(dplyr)
-
 dat3 <- head(dat, n = 20L,) %>% select(Colony,Mass)
   
 
@@ -130,11 +136,9 @@ dat3 <- head(dat, n = 20L,) %>% select(Colony,Mass)
 
 
 # Write your new object "dat3" to a file named "LASTNAME_first_file.csv" in your PERSONAL git repository
-getwd()
-setwd("../../Data_Course_Park/")
+
 write.csv(dat3,"./PARK_Jeff_file.csv")
 list.files() #nice
-
 
 ### for loops in R ###
 
@@ -149,13 +153,12 @@ for(i in levels(dat$Size.class)){
 }
 
 # can calculate something for each value of i ...can use to subset to groups of interest
-for(i in levels(dat$Size.class)){
-  print(mean(dat[dat$Size.class == i,"Mass"]))
+for(i in levels(dat$Size.class)){print(mean(dat[dat$Size.class == i,"Mass"]))
 }
-
+class(dat$Size.class)
 # more complex:
 # define a new vector or data frame outside the for loop first
-new_vector = c(1:100) # it's empty
+new_vector = c() # it's empty
 # also define a counter
 x = 1
 
@@ -178,11 +181,20 @@ for(i in levels(dat$Size.class)){
   }
 
 #fill it in
-size_class_mean_mass = data.frame(...)
+size_class_mean_mass = data.frame(Size_Class = levels(dat$Size.class),
+                                  MEAN = new_vector)
+## or
+dat_summary <- dat %>% group_by(Size.class) %>%
+  summarize(Mean_Mass = mean(Mass),
+            Mean_Headwidth = mean(Headwidth))
 
+##summarize(first variable name = mean(Mass),
+#   secondasdfjk; = mean(Headwidth))
 
-
-
+data("luv_colours")
+str(luv_colours)
+luv_colours %>% group_by(col) %>% 
+  summarize(MEAN = mean(L))
 
 ############ YOUR HOMEWORK ASSIGNMENT ##############
 
