@@ -1,6 +1,8 @@
 getwd()
-Snails <- read.delim2 ("ITS_mapping.csv")
+Snails <- read.delim ("../Data_Course/Data/ITS_mapping.csv")
+
+png(filename = "./Assignments/Assignment_4/silly_boxplot.png")
 plot(x = Snails$Ecosystem, y = Snails$Lat)
-png("../../Data_Course_Park/Assignments/Assignment_4/silly_boxplot.png")
+
 dev.off()
-getwd()
+
