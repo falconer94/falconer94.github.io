@@ -1,0 +1,2 @@
+1. The predictions are meaningful. The growth rate increases as the light increases. 
+2. It looks pretty linear to me. 
