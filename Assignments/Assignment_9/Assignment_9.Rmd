@@ -1,0 +1,54 @@
+---
+title: "Assignment 9"
+author: "Jeff Park"
+date: "4/9/2020"
+output: html_document
+---
+
+```{r, include = FALSE}
+library(tidyverse)
+library(modelr)
+library(GGally)
+```
+
+Data: Grad School Admissions
+
+```{r}
+df <- read.csv("GradSchool_Admissions.csv")
+df$admit <- as.logical(df$admit)
+df$rank <- as.factor(df$rank)
+```
+
+Mods
+
+```{r}
+mod1 <- glm(data = df, formula = admit ~ rank)
+mod2 <- glm(data = df, formula = admit ~ rank + gre + gpa,family = "binomial")
+mod3 <- glm(data = df, formula = admit ~ rank * gre * gpa,family = "binomial")
+mean(residuals(mod2)^2)
+mean(residuals(mod3)^2)
+```
+
+Mod3 has lowest MSE
+
+```{r}
+mod3.pred <- add_predictions(df,mod3,type = "response")
+```
+
+Admit has a stronger correlation with Rank than GPA or GRE score. 
+
+```{r}
+ggplot(mod3.pred, aes(x=gpa,y=pred,color=rank))+
+  geom_point()
+```
+
+
+```{r}
+
+ggplot(mod3.pred,aes(x=gre,y=pred,color=rank))+
+  geom_point()
+```
+
+Conclusion:
+
+The grad schools considered are more concerned about the university rank of the undergraduates than their GRE score or GPA. 
