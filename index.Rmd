@@ -11,13 +11,13 @@ pagetitle: Jeff Park
 </style>
 
 <style>
-div.gray { background-color:#aabdaf; border-radius: 5px; padding: 20px;}
+div.gray { background-color:#1f68cf; border-radius: 5px; padding: 20px;}
 </style>
 <div class = "gray">
 
 
 <style>
-div.blue { background-color:#a89d82; border-radius: 5px; padding: 20px;}
+div.blue { background-color:#cfc5ab; border-radius: 5px; padding: 20px;}
 </style>
 <div class = "blue">
 
