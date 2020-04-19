@@ -1,0 +1,29 @@
+---
+output: html_document
+pagetitle: Jeff Park
+---
+<style type="text/css">
+.main-container {
+  max-width: 1800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+
+<style>
+div.gray { background-color:#aabdaf; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "gray">
+
+
+<style>
+div.blue { background-color:#a89d82; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "blue">
+
+## [HOME](http://falconer94.github.io/) | [ABOUT ME](http://falconer94.github.io/About_Me/) | [CV](https://falconer94.github.io/CV)
+
+# **Jeff Park - Utah Valley University**
+
+## **Contact**
+### jeff.park94@gmail.com
