@@ -1,0 +1,90 @@
+---
+output: html_document
+---
+
+<style type="text/css">
+.main-container {
+  max-width: 1800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+
+<style>
+div.gray { background-color:#1f68cf; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "gray">
+
+
+<style>
+div.blue { background-color:#cfc5ab; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "blue">
+
+## [Home](http://falconer94.github.io/) | [About Me](http://falconer94.github.io/About_Me/) | [Project](https://falconer94.github.io/Project) | [Exam 3](https://falconer94.github.io/Exam_3)
+
+
+
+# Exam 3
+
+## Load packages
+```{r}
+library(tidyverse)
+library(GGally)
+library(modelr)
+```
+
+## Load and tidy data
+```{r}
+df <- mtcars
+
+df$cyl <- as.factor(df$cyl)
+```
+
+
+## Glimpse
+```{r}
+ggpairs(df)
+```
+
+
+MPG has strong correlations with weight and cylinders. 
+
+
+## Models
+```{r}
+mod1 <- glm(data=df, formula = wt ~ mpg)
+mod2 <- glm(data=df, formula = wt ~ mpg + cyl)
+mod3 <- glm(data=df, formula = wt ~ mpg * cyl)
+```
+
+## Test models
+```{r}
+mod1mse <- mean(residuals(mod1)^2)
+mod2mse <- mean(residuals(mod2)^2)
+mod3mse <- mean(residuals(mod3)^2)
+
+mod1mse
+mod2mse
+mod3mse
+```
+
+Mod3 has lowest mean squared error which indicates a better model. 
+
+## Create predictions
+```{r}
+mod3.pred <- add_predictions(df,mod3,type = "response")
+```
+
+
+## Plot
+```{r}
+ggplot(mod3.pred,aes(y=mpg,color=cyl)) +
+  geom_point(aes(x=wt))+
+  geom_line(aes(x=pred))+
+  labs(title="Relationship between gas efficiency, weight, and number of cylinders",
+       x="Weight (1000 lbs)",y="Gas efficiency (MPG)",color="Cylinders")
+
+```
+
+As the weight and number of cylenders increases, the gas efficiency decreases.
