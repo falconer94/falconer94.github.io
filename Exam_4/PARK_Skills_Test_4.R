@@ -46,22 +46,31 @@ dev.off()
 
 
 
-# IV
+# IV ####
 df$Year_Collected<- as.factor(df$Year_Collected)
 summary(df)
-df3<- df %>% group_by(Year_Collected) %>% 
+Avgs<- df %>% group_by(Year_Collected) %>% 
   summarize(Bens_performance = mean(DNA_Concentration_Ben),
             Katys_performance = mean(DNA_Concentration_Katy)) %>% 
   mutate(Difference = Bens_performance - Katys_performance)
 
-Ben_lowest_avg <- df3 %>% arrange(Difference) %>% head(1)
+Ben_lowest_avg <- Avgs %>% arrange(Difference) %>% head(1)
 Ben.sucked.the.most.on <- Ben_lowest_avg[1,1]
 
 
 
-# V
+# V ####
 df2<- df %>% filter(Lab == "Downstairs")
 jpeg("Ben_DNA_over_time.jpg")
 plot(x=as.POSIXct(df2$Date_Collected),y=df2$DNA_Concentration_Ben,
      xlab="Date_Collected",ylab="DNA_Concentration_Ben")
 dev.off()
+
+
+
+# VI ####
+Ben_highest_avg <- Avgs %>% arrange(desc(Bens_performance)) %>% head(1)
+Ben.performed.best.on <- Ben_highest_avg[1,1]
+Avgs %>% select(Year_Collected,Bens_performance) %>% 
+  write.csv("Ben_Average_Conc.csv")
+
