@@ -32,6 +32,7 @@ div.blue { background-color:#cfc5ab; border-radius: 5px; padding: 20px;}
 library(tidyverse)
 library(GGally)
 library(modelr)
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 ```
 
 ## Load and tidy data
@@ -58,7 +59,16 @@ mod2 <- glm(data=df, formula = wt ~ mpg + cyl)
 mod3 <- glm(data=df, formula = wt ~ mpg * cyl)
 ```
 
+Including cyl in the formula may help give more accurate predictions between wt and mpg. 
+
 ## Test models
+```{r,eval=FALSE}
+summary(mod1)
+summary(mod2)
+summary(mod3)
+```
+Looking at the summaries of each potential model shows that mod3 has the lowest P-value, indicating a more probabale model. 
+
 ```{r}
 mod1mse <- mean(residuals(mod1)^2)
 mod2mse <- mean(residuals(mod2)^2)
@@ -69,7 +79,7 @@ mod2mse
 mod3mse
 ```
 
-Mod3 has lowest mean squared error which indicates a better model. 
+Mod3 has lowest mean squared error which also indicates a more probable model. 
 
 ## Create predictions
 ```{r}
@@ -87,4 +97,4 @@ ggplot(mod3.pred,aes(y=mpg,color=cyl)) +
 
 ```
 
-As the weight and number of cylenders increases, the gas efficiency decreases.
+As the weight and number of cylenders increases, the gas efficiency decreases. The data suggests that the heavier the car is, the more cylinders it needs, and the more gas it uses per mile. Who would've thought?
