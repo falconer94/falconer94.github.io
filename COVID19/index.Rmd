@@ -25,18 +25,21 @@ div.blue { background-color:#cfc5ab; border-radius: 5px; padding: 20px;}
 ### [Back](http://falconer94.github.io/)
 
 # **Underlying conditions and symptoms of COVID-19 in the US**
-
+## Relationship between COVID-19, pneumonia, and Influenza
 ```{r,include=FALSE}
 library(tidyverse)
-
+library(GGally)
 cv <- read.csv("Provisional_Death_Counts_for_Coronavirus_Disease__COVID-19_.csv")
+```
 
-# Rename columns
+### Tidy 1
+After loading the libraries and data, I tidied them up. They were pretty messy.
+```{r}
 cv <- cv %>% 
   rename("Date.as.of" = "ï..Data.as.of") %>%
   rename("All.cv.deaths" = "All.COVID.19.Deaths..U07.1.") %>%
   rename("All.pna.deaths" = "All.Pneumonia.Deaths..J12.0.J18.9.") %>% 
-  rename("Pna.cv.deaths"  = "Deaths.with.Pneumonia.and.COVID.19..J12.0.J18.9.and.U07.1.") %>% 
+  rename("Pna.cv.deaths"  = "Deaths.with.Pneumonia.and.COVID.19..J12.0.J18.9.and.U07.1.") %>%
   rename("All.flu.deaths" = "All.Influenza.Deaths..J09.J11.") %>% 
   rename("pna.flu.cv.deaths" = "Pneumonia..Influenza..and.COVID.19.Deaths")
 
@@ -45,33 +48,24 @@ cv <- cv %>%
 cv$Indicator <- str_replace(cv$Indicator, "â€“","-") %>% 
   str_remove("years") %>% str_remove(" year")
 
-
 # by_age; remove unused columns
 by_age <- 
   cv %>% filter(Group == "By age") %>% 
   select(Indicator,All.cv.deaths,All.pna.deaths,All.flu.deaths,Pna.cv.deaths,)
 
-
-# Remove commas; numeric
-
+# Remove commas; change to numeric
 by_age$All.cv.deaths <- as.numeric(gsub(",","",by_age$All.cv.deaths))
-
 by_age$All.pna.deaths <- as.numeric(gsub(",","",by_age$All.pna.deaths))
-
 by_age$Pna.cv.deaths <- as.numeric(gsub(",","",by_age$Pna.cv.deaths))
-
 by_age$All.flu.deaths <- as.numeric(gsub(",","",by_age$All.flu.deaths))
 
-
-# Indicator as facter; reorder levels
+# Indicator as facter; reorder levels so the "Under 1" is not last
 by_age$Indicator <- 
   factor(by_age$Indicator,levels = c("Under 1","1-4 ","5-14 ","15-24 ","25-34 ","35-44 ","45-54 ","55-64 ","65-74 ","75-84 ","85  and over", "All ages"))
 
 # Remove All ages
 by_age <- 
   by_age %>% filter(Indicator != "All ages")
-
-
 
 # Gather columns as variable
 by_age <- 
@@ -82,17 +76,13 @@ by_age$type <-
   as.factor(by_age$type)
 
 ```
-
-
-
-
-
+<br>
+<br>
+### Plot 1
 ```{r,echo=FALSE}
 # Plot 
-
 ggplot(by_age, aes(x= Indicator,y=deaths,color=type)) +
   geom_line(aes(group=type),size=2)+
-  
   labs(title = "Number of disease-related deaths in each age group", x = "Age (years)", y = "Number of deaths")+
   scale_color_discrete(name = "Type of death",
                       breaks= c("All.cv.deaths","All.flu.deaths",
@@ -105,28 +95,55 @@ ggplot(by_age, aes(x= Indicator,y=deaths,color=type)) +
 <br>
 Data souce: https://www.cdc.gov/nchs/nvss/vsrr/covid19/
 <br>
+<br>
+The number of deaths per age group in the US. The likelihood of dying from these diseases is greater in older people, particularly pneumonia. There seems to be a correlation between pneumonia and COVID-19 as well.
+<br>
+<br>
+```{r,warning=FALSE}
+# spread
+by_age_spread <- 
+  spread(by_age,key = "type",value = "deaths")
+cor.test(by_age_spread$All.cv.deaths,by_age_spread$All.pna.deaths)
 
+```
+<br>
+The p-value of COVID-19 and pneumonia deaths is small and the correlation value is high, suggesting that there is a strong correlation. 
+<br>
+<br>
+```{r,warning=FALSE}
+ggpairs(by_age_spread)
 
-```{r,include=FALSE}
-#### Underlying conditions and symptoms ####
+```
+<br>
+<br>
+ggpairs shows that the correlation values are very high, so there are very strong correlations between all three diseases. 
+<br>
+<br>
+<br>
+<br>
+# Underlying conditions and symptoms
+<br>
+This next data set shows the proportions of underlying conditions and symptoms of hospitalized COVID-19 infected patients by age group. 
+```{r,warning=FALSE}
 
-# Tidy
+# Let's tidy up this mess!
+
+# Underlying conditions
 uc <- read.csv("Underlying_conditions_by_age_group.csv") %>% 
   rename("Underlying.condition" = "ï..Underlying.condition") %>% 
   rename("19-49" = "X18â..49") %>% 
   rename("50-64" = "X50â..64") %>% 
   rename("65 and over" = "â..65") 
-names(uc)
 
+# Symptoms
 sm <- read.csv("Symptoms_by_age_group.csv") %>% 
   rename("Symptoms" = "ï..Symptoms") %>% 
   rename("19-49" = "X18â..49") %>% 
   rename("50-64" = "X50â..64") %>% 
   rename("65 and over" = "â..65.years")
-names(sm)
 
 
-# Extract %; numeric
+# Extract only the proportion values that are within parentheses; as numeric
 uc$Overall <- 
   str_sub(uc$Overall, -5,-2) %>% str_remove("\\(") %>% as.numeric()
 uc$`19-49` <- 
@@ -135,7 +152,6 @@ uc$`50-64` <-
   str_sub(uc$`50-64`, -5,-2) %>% str_remove("\\(") %>% as.numeric()
 uc$`65 and over` <- 
   str_sub(uc$`65 and over`, -5,-2) %>% str_remove("\\(") %>% as.numeric()
-
 
 sm$Overall <- 
   str_sub(sm$Overall, -5,-2) %>% str_remove("\\(") %>% as.numeric()
@@ -146,15 +162,18 @@ sm$`50-64` <-
 sm$`65 and over` <- 
   str_sub(sm$`65 and over`, -5,-2) %>% str_remove("\\(") %>% as.numeric()
 
-
 # Gather age groups
-
 uc <- uc %>%  
   gather("Overall","19-49","50-64","65 and over", key="age.group", value = "percentage")
 
 sm <- sm %>%  
   gather("Overall","19-49","50-64","65 and over", key="age.group", value = "percentage")
-names(sm)
+
+# Remove "Overall"
+uc <- 
+  uc %>% filter(age.group != "Overall")
+sm <- 
+  sm %>% filter(age.group != "Overall")
 
 # Rename symptoms/conditions
 uc$Underlying.condition <- str_remove_all(uc$Underlying.condition,"Â") %>% str_remove_all("Â¶") %>% 
@@ -163,17 +182,14 @@ uc$Underlying.condition <- str_remove_all(uc$Underlying.condition,"Â") %>% str_
 sm$Symptoms <- str_remove_all(sm$Symptoms,"Â") %>% str_remove_all("Â¶") %>% 
   str_trim() %>% str_remove_all("¶")
 
-
 # age group as factor
-str(uc)
-
 uc$age.group <- as.factor(uc$age.group)
 sm$age.group <- as.factor(sm$age.group)
 
 ```
 
 
-```{r,echo=FALSE}
+```{r,echo=FALSE,warning=FALSE}
 # Plot uc
 
   ggplot(uc, aes(x=age.group,y = percentage,color=Underlying.condition)) +
@@ -184,7 +200,10 @@ sm$age.group <- as.factor(sm$age.group)
 
 ```
 <br>
+A large proportion of patients had any of these kinds of conditions along with COVID-19. This suggests that those who are 65 and older are more likely to contract the disease. In terms of the underlying conditions, those with hypertension, obesity, or cardiovascular related conditions are higher at risk. 
 <br>
+<br>
+
 ```{r,echo=FALSE}
 # Plot sm
   ggplot(sm, aes(x=age.group,y = percentage,color=Symptoms)) +
@@ -196,3 +215,22 @@ sm$age.group <- as.factor(sm$age.group)
 <br>
 Data source: "Table" from https://www.cdc.gov/mmwr/volumes/69/wr/mm6915e3.htm
 <br>
+<br>
+Those infected with COVID-19 are most likely to experience fever/chills, shortness of breath, and coughing, regardless of the age. 
+<br>
+<br>
+<br>
+## Conclusion
+<br>
+COVID-19 is strongly correlated with preexisting respiratory and cardiovascular conditions. 
+
+
+
+
+
+
+
+
+
+
+
