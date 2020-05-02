@@ -21,7 +21,7 @@ div.blue { background-color:#cfc5ab; border-radius: 5px; padding: 20px;}
 </style>
 <div class = "blue">
 
-## [Home](http://falconer94.github.io/) | [About Me](http://falconer94.github.io/About_Me/) | [Project](https://falconer94.github.io/Project) | [Exam 3](https://falconer94.github.io/Exam_3)
+### [Back](http://falconer94.github.io/)
 
 
 
