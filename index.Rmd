@@ -29,6 +29,9 @@ div.blue { background-color:#cfc5ab; border-radius: 5px; padding: 20px;}
 
 
 # **Jeff Park - Utah Valley University**
+```{r, echo=FALSE,out.height= "200px"}
+knitr::include_graphics("About_Me/Pics/Portrait.jpeg")
+```
 
 ## **Contact**
 ### jeff.park94@gmail.com
