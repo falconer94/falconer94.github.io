@@ -31,14 +31,25 @@ div.blue { background-color:#cfc5ab; border-radius: 5px; padding: 20px;}
 knitr::include_graphics("Pics/Jeff (38).JPG")
 ```
 <br><br>
-I grew up in Northern Idaho near Spokane, WA, served a Spanish-speaking mission for my church in LA, married for four years, and almost have my bachelor's in biology from UVU.
+Hi, I'm Jeff.
 <br><br>
-I love learning new things, so I have a lot of hobbies. Some of my favorites (which I may not be currently participating in) are falconry, pets, music, and reading/writing sci-fi and fantasy. 
+I grew up in Northern Idaho near Spokane, WA, served a Spanish-speaking mission for my church in LA, married for four years, and earned a bachelor's degree in biology from UVU. My passions are creativity, learning, faith, and family.
+<br><br>
+I'm excited about starting a career in data analysis or software development. While getting my bachelor's in biology, I grew curious---even passionate---about data and the power it contains to uncover the truth. I took a class on R and got hooked. I love the challenge in programming and writing script, learning how to solve numerous problems in different ways, and creating something that's almost living.
+<br><br>
+As part of my passions in creativity and learning, I have picked up a lot of hobbies over the years:
+<br><br>
+🦅Falconry
+🎨oil painting
+🎸🎤music
+📖sci-fi/fantasy writing
+🌻gardening
+🏞️terrarium building
+🐕🦜🐸🦎 pet keeping.
+<br><br>
+--Jeff Park
 <br><br>
 ```{r, echo=FALSE,out.height= "200px"}
 knitr::include_graphics("Pics/Astrid.JPG")
 knitr::include_graphics("Pics/Indy on couch (26).JPG")
 ```
-<br><br>
-My mental health has been a challenge for me for the last several years, but it has shaped me into a better person. 
-
