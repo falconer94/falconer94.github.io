@@ -25,7 +25,7 @@ div.blue { background-color:#cfc5ab; border-radius: 5px; padding: 20px;}
 
 # R Demonstrations
 
-## [About Me](http://falconer94.github.io/About_Me/) | [COVID-19 Project](https://falconer94.github.io/COVID19) | [Exam 3](https://falconer94.github.io/Exam_3) 
+## [About Me](http://falconer94.github.io/About_Me/) | [COVID-19 Project](https://falconer94.github.io/COVID19) | [Exam](https://falconer94.github.io/Exam_3) | [Personal Finance Project](https://falconer94.github.io/PersonalFinances)
 
 
 # **Jeff Park - Utah Valley University**
